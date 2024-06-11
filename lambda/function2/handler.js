@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
     return {
         statusCode: 200,
-        body: JSON.stringify('Hello for Function 2!'),
+        body: JSON.stringify('Hello from mahesh kumar to Function 2!'),
     };
 };
