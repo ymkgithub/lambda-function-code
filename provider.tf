@@ -6,6 +6,11 @@ terraform {
       version = ">= 3.0"
     }
   }
+ backend "s3" {
+    bucket = "lambda-tf-bucket-github-runner"
+    key    = "Lambda_TF_State/terraform.tfstate"
+    region = "us-east-1"
+  }
 }
 
 provider "aws" {
