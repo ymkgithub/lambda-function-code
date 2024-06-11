@@ -11,8 +11,8 @@ on:
 jobs:
   Manage_Terraform_Resources:
     runs-on: self-hosted
-    env:
-      TF_WORKING_DIR: ./../
+    # env:
+    #   TF_WORKING_DIR: ./../
   
     steps:
       - name: Checkout code
@@ -30,26 +30,26 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
       
       - name: Terraform Format
         run: terraform fmt -check -diff
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
       
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Terraform Apply or Destroy
         if: github.event.inputs.action == 'apply'
         run: terraform apply -auto-approve tfplan
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
 
       - name: Terraform Destroy
         if: github.event.inputs.action == 'destroy'
         run: terraform destroy -auto-approve
-        working-directory: ${{ env.TF_WORKING_DIR }}
+        # working-directory: ${{ env.TF_WORKING_DIR }}
