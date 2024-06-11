@@ -12,7 +12,7 @@ jobs:
   Manage_Terraform_Resources:
     runs-on: self-hosted
     env:
-      TF_WORKING_DIR: ./
+      TF_WORKING_DIR: ./../
   
     steps:
       - name: Checkout code
