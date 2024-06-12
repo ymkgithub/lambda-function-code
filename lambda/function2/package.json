@@ -1,0 +1,7 @@
+{
+    "name": "lambda-function2",
+    "version": "1.0.0",
+    "main": "handler.js",
+    "dependencies": {}
+  }
+  
