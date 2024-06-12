@@ -9,8 +9,8 @@ terraform {
   }
   # Adding Backend as S3 for Remote State Storage
   backend "s3" {
-    bucket = "cy-rl-seam-tf-bucket"
-    key    = "cy-rl-seam/terraform.tfstate"
+    bucket = "lambda-tf-bucket-github-runner"
+    key    = "lamda/terraform.tfstate"
     region = "us-east-1"
 
   }
