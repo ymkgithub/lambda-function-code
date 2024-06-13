@@ -42,6 +42,11 @@ resource "aws_lambda_layer_version" "my_layer" {
   layer_name          = each.key
   compatible_runtimes = each.value.runtime
   source_code_hash    = filebase64sha256(local.layer_zip_paths[each.key])
+  
+  lifecycle {
+    create_before_destroy = true
+  }
+
 }
  
 # Create Lambda Functions
