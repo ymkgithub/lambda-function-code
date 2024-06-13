@@ -75,7 +75,7 @@ resource "aws_lambda_function" "my_lambda" {
   role             = aws_iam_role.iam_for_lambda.arn
   source_code_hash = filebase64sha256(local.function_zip_paths[each.key])
   #layers           = [for name, _ in aws_lambda_layer_version.my_layer : data.aws_lambda_layer_version.latest_layer[name].arn]
-  #layers = [for name, _ in aws_lambda_layer_version.my_layer : aws_lambda_layer_version.my_layer[name].arn]
+  layers = [for name, _ in aws_lambda_layer_version.my_layer : aws_lambda_layer_version.my_layer[name].arn]
   publish          = true
  
   lifecycle {
@@ -93,26 +93,26 @@ resource "aws_lambda_alias" "live" {
   function_version = aws_lambda_function.my_lambda[each.key].version
 }
  
-# Reference existing Lambda functions
-data "aws_lambda_function" "existing_lambda" {
-  for_each = var.lambda_functions
-  function_name = each.key
-}
+# # Reference existing Lambda functions
+# data "aws_lambda_function" "existing_lambda" {
+#   for_each = var.lambda_functions
+#   function_name = each.key
+# }
  
-# Update Lambda Layers for Each Function
-resource "null_resource" "update_layers" {
-  for_each = data.aws_lambda_function.existing_lambda
+# # Update Lambda Layers for Each Function
+# resource "null_resource" "update_layers" {
+#   for_each = data.aws_lambda_function.existing_lambda
  
-  provisioner "local-exec" {
-    command = <<EOT
-      aws lambda update-function-configuration --function-name ${each.key} --layers ${join(" ", [for layer_name in keys(var.lambda_layers) : aws_lambda_layer_version.my_layer[layer_name].arn])}
-    EOT
-  }
+#   provisioner "local-exec" {
+#     command = <<EOT
+#       aws lambda update-function-configuration --function-name ${each.key} --layers ${join(" ", [for layer_name in keys(var.lambda_layers) : aws_lambda_layer_version.my_layer[layer_name].arn])}
+#     EOT
+#   }
  
-  triggers = {
-    function_name  = each.key
-    layer_versions = join(",", [for layer_name in keys(var.lambda_layers) : aws_lambda_layer_version.my_layer[layer_name].version])
-  }
+#   triggers = {
+#     function_name  = each.key
+#     layer_versions = join(",", [for layer_name in keys(var.lambda_layers) : aws_lambda_layer_version.my_layer[layer_name].version])
+#   }
  
-  depends_on = [aws_lambda_layer_version.my_layer]
-}
+#   depends_on = [aws_lambda_layer_version.my_layer]
+# }
