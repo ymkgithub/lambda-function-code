@@ -42,7 +42,7 @@ resource "aws_lambda_layer_version" "my_layer" {
   layer_name          = each.key
   compatible_runtimes = each.value.runtime
   source_code_hash    = filebase64sha256(local.layer_zip_paths[each.key])
-  
+
   lifecycle {
     create_before_destroy = true
   }
@@ -74,7 +74,6 @@ resource "aws_lambda_function" "my_lambda" {
   runtime          = each.value.runtime
   role             = aws_iam_role.iam_for_lambda.arn
   source_code_hash = filebase64sha256(local.function_zip_paths[each.key])
-  #layers           = [for name, _ in aws_lambda_layer_version.my_layer : data.aws_lambda_layer_version.latest_layer[name].arn]
   #layers = [for name, _ in aws_lambda_layer_version.my_layer : aws_lambda_layer_version.my_layer[name].arn]
   publish          = true
  
@@ -97,6 +96,7 @@ resource "aws_lambda_alias" "live" {
 data "aws_lambda_function" "existing_lambda" {
   for_each = var.lambda_functions
   function_name = each.key
+  depends_on = [ aws_lambda_function.my_lambda ]
 }
  
 # Update Lambda Layers for Each Function
