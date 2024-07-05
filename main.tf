@@ -143,6 +143,46 @@ resource "null_resource" "update_layers" {
   depends_on = [aws_lambda_layer_version.my_layer]
 }
 
+# Provisioned Concurrency Configuration
+resource "aws_lambda_provisioned_concurrency_config" "function_concurrency" {
+  for_each               = var.lambda_functions
+  function_name          = each.key
+  qualifier              = aws_lambda_function.my_lambda[each.key].function_name
+  provisioned_concurrent_executions = 2
+  depends_on = [aws_lambda_alias.live]
+}
+
+# Application Auto Scaling for Lambda Provisioned Concurrency
+resource "aws_appautoscaling_target" "lambda_scaling_target" {
+  for_each               = var.lambda_functions
+  max_capacity       = 5
+  min_capacity       = 2
+  resource_id        = "function:${each.key}:${aws_lambda_alias.live.name}"
+  scalable_dimension = "lambda:function:ProvisionedConcurrency"
+  service_namespace  = "lambda"
+  depends_on = [ aws_lambda_provisioned_concurrency_config.function_concurrency ]
+}
+
+resource "aws_appautoscaling_policy" "lambda_scaling_policy" {
+  name               = "lambda-scaling-policy"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.lambda_scaling_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.lambda_scaling_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.lambda_scaling_target.service_namespace
+  depends_on = [ aws_appautoscaling_target.lambda_scaling_target ]
+
+  target_tracking_scaling_policy_configuration {
+    target_value = 0.75
+
+    predefined_metric_specification {
+      predefined_metric_type = "LambdaProvisionedConcurrencyUtilization"
+    }
+
+    scale_in_cooldown  = 60
+    scale_out_cooldown = 60
+  }
+}
+
 # Null resource to publish a new version of the Lambda function
 # resource "null_resource" "publish_version" {
 #   for_each = data.aws_lambda_function.existing_lambda
