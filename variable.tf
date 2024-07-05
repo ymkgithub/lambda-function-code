@@ -12,6 +12,10 @@ variable "lambda_functions" {
       handler = "handler.handler"
       runtime = "nodejs20.x"
     }
+    function3 = {
+      handler = "handler.handler"
+      runtime = "nodejs20.x"
+    }
   }
 }
 
@@ -24,6 +28,9 @@ variable "lambda_layers" {
       runtime = ["nodejs20.x"]
     }
     layer2 = {
+      runtime = ["nodejs20.x"]
+    }
+    layer3 = {
       runtime = ["nodejs20.x"]
     }
   }
