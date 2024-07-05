@@ -22,25 +22,25 @@ locals {
 
 # S3 Bucket for Lambda Function Zips
 resource "aws_s3_bucket" "lambda_bucket" {
-  bucket = "my-multi-lambda-functions-bucket"
+  bucket = "ymk-lambda-bucket"
 }
 
-# IAM Role for Lambda
-resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
+# # IAM Role for Lambda
+# resource "aws_iam_role" "iam_for_lambda" {
+#   name = "iam_for_lambda"
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = "sts:AssumeRole"
+#         Effect = "Allow"
+#         Principal = {
+#           Service = "lambda.amazonaws.com"
+#         }
+#       }
+#     ]
+#   })
+# }
 
 # Attach IAM policy to the IAM role
 resource "aws_iam_role_policy_attachment" "attach_lambda_policy" {
