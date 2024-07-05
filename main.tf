@@ -160,7 +160,7 @@ resource "aws_lambda_provisioned_concurrency_config" "function_concurrency" {
 resource "aws_appautoscaling_target" "lambda_scaling_target" {
   for_each               = var.lambda_functions
 
-  max_capacity           = 5
+  max_capacity           = 3
   min_capacity           = 2
   resource_id            = "function:${aws_lambda_function.my_lambda[each.key].function_name}:${aws_lambda_alias.live[each.key].name}"
   scalable_dimension     = "lambda:function:ProvisionedConcurrency"
