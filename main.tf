@@ -149,7 +149,7 @@ resource "aws_lambda_provisioned_concurrency_config" "function_concurrency" {
 
   function_name          = aws_lambda_function.my_lambda[each.key].function_name
   qualifier              = aws_lambda_alias.live[each.key].name
-  provisioned_concurrent_executions = 1
+  provisioned_concurrent_executions = 2
 
   depends_on = [
     aws_lambda_alias.live
@@ -160,8 +160,8 @@ resource "aws_lambda_provisioned_concurrency_config" "function_concurrency" {
 resource "aws_appautoscaling_target" "lambda_scaling_target" {
   for_each               = var.lambda_functions
 
-  max_capacity           = 2
-  min_capacity           = 1
+  max_capacity           = 5
+  min_capacity           = 2
   resource_id            = "function:${aws_lambda_function.my_lambda[each.key].function_name}:${aws_lambda_alias.live[each.key].name}"
   scalable_dimension     = "lambda:function:ProvisionedConcurrency"
   service_namespace      = "lambda"
