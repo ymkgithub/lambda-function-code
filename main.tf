@@ -152,7 +152,7 @@ resource "aws_lambda_provisioned_concurrency_config" "function_concurrency" {
   provisioned_concurrent_executions = 2
 
   depends_on = [
-    aws_lambda_alias.live[each.key]
+    aws_lambda_alias.live
   ]
 }
 
@@ -167,7 +167,7 @@ resource "aws_appautoscaling_target" "lambda_scaling_target" {
   service_namespace      = "lambda"
 
   depends_on = [
-    aws_lambda_provisioned_concurrency_config.function_concurrency[each.key]
+    aws_lambda_provisioned_concurrency_config.function_concurrency
   ]
 }
 
@@ -190,7 +190,7 @@ resource "aws_appautoscaling_policy" "lambda_scaling_policy" {
   }
 
   depends_on = [
-    aws_appautoscaling_target.lambda_scaling_target[each.key]
+    aws_appautoscaling_target.lambda_scaling_target
   ]
 }
 
