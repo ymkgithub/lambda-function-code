@@ -172,6 +172,7 @@ resource "aws_appautoscaling_target" "lambda_scaling_target" {
 }
 
 resource "aws_appautoscaling_policy" "lambda_scaling_policy" {
+  for_each               = var.lambda_functions
   name               = "lambda-scaling-policy"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.lambda_scaling_target[each.key].resource_id
