@@ -159,7 +159,7 @@ resource "null_resource" "delay_on_function_code_changes" {
 
   # Ensure the null_resource runs after the lambda function is updated
   depends_on = [
-    aws_lambda_function.my_lambda[each.key]
+    aws_lambda_function.my_lambda
   ]
 }
 
