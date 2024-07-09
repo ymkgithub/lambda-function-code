@@ -1,6 +1,6 @@
 exports.handler = async (event) => {
     return {
         statusCode: 200,
-        body: JSON.stringify('Say Hi 12345678 and Hello from mahesh kumar to Function 3!'),
+        body: JSON.stringify('Testing the provisioned concurrency for Function 3!'),
     };
 };
