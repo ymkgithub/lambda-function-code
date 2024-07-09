@@ -152,6 +152,13 @@ resource "null_resource" "update_layers" {
   depends_on = [aws_lambda_layer_version.my_layer]
 }
 
+resource "null_resource" "delay" {
+   provisioner "local-exec" {
+    command = "sleep 180"
+  }
+  depends_on = [aws_lambda_alias.provisioned ]
+}
+
 # Provisioned Concurrency Configuration
 resource "aws_lambda_provisioned_concurrency_config" "function_concurrency" {
   for_each = var.lambda_functions
@@ -161,7 +168,7 @@ resource "aws_lambda_provisioned_concurrency_config" "function_concurrency" {
   provisioned_concurrent_executions = 2
 
   depends_on = [
-    aws_lambda_alias.provisioned
+    null_resource.delay
   ]
 }
 
